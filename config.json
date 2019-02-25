@@ -1,0 +1,9 @@
+{
+	"db": {
+		"URI": "mongodb://localhost/io-control"
+	},
+	"auth": {
+		"secret": "WHY DO WE USE A SECRET FOR THIS?",
+		"requirement": "^(?=.*\\d).{4,8}$"
+	}
+}

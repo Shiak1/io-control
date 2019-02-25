@@ -1,0 +1,31 @@
+.flex {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+}
+
+.flex > .vertical-center {
+    -webkit-flex-shrink: 0;
+    flex-shrink: 0;
+    display: block;
+    margin: 0 auto;
+    min-height: 0;
+    width: 350px;
+}
+
+.flex::before,
+.flex::after {
+    -webkit-box-flex: 1;
+    box-flex: 1;
+    -webkit-flex-grow: 1;
+    flex-grow: 1;
+    content: '';
+    display: block;
+    height: 24px;
+}
