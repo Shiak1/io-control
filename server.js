@@ -8,17 +8,17 @@ const path = require('path');
 const app = express();
 
 async function boot() {
-	await db();
+    await db();
 
-	router(app, path.join(__dirname, 'frontend/dist'));
+    router(app, path.join(__dirname, 'frontend/dist'));
 
-	app.listen(500);
+    app.listen(500);
 }
 
 boot()
-	.then(() => console.log('Started'))
-	.catch(error => {
-		console.error(error);
+    .then(() => console.log('Started'))
+    .catch(error => {
+        console.error(error);
 
-		process.exit(1);
-	});
+        process.exit(1);
+    });

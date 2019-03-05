@@ -3,54 +3,85 @@ const express = require('express');
 
 const { NotFound } = require('../exceptions');
 const { errorHandler, authentication } = require('../middleware');
-const controllers = ['authentication'];
 
-module.exports = function(app, publicPath) {
-    app.use(body.urlencoded({ extended: false }));
-    app.use(body.json());
+module.exports = (app, publicPath) => new Router(app, publicPath);
 
-    authentication.init(app);
+class Router {
+    constructor(app, publicPath) {
+        this.app = app;
+        this.publicPath = publicPath;
+        this.controllers = ['authentication'];
 
-    const loader = response => response.sendFile(publicPath + '/index.html');
+        this.authentication = authentication(app);
 
-    app.get('/login', (request, response) => loadLoginView(request, response, loader));
-    app.get('/', (request, response) => loadView(request, response, loader));
-
-    app.post('/logout', (request, response) => {
-        response.clearCookie('user-id');
-
-        response.redirect('/login');
-    });
-
-    app.use('/', express.static(publicPath));
-
-    app.use(authentication.validate);
-
-    controllers.forEach(controller => {
-        app.use('/api/' + controller, require('./' + controller));
-    });
-
-    app.use('/api/*', (request, response, next) => {
-        next(new NotFound());
-    });
-
-    app.use('/*', (request, response) => loadView(request, response, loader));
-
-    app.use(errorHandler);
-};
-
-function loadView(request, response, loader) {
-    if (authentication.isAuthenticated(request)) {
-        loader(response);
-    } else {
-        response.redirect('/login');
+        this.setupBodyParser();
+        this.setupViews();
+        this.exposePublicPaths();
+        this.injectAuth();
+        this.setupApi();
+        this.handleErrors();
     }
-}
 
-function loadLoginView(request, response, loader) {
-    if (authentication.isAuthenticated(request)) {
-        response.redirect('/');
-    } else {
-        loader(response);
+    setupBodyParser() {
+        this.app.use(body.urlencoded({ extended: false }));
+        this.app.use(body.json());
+    }
+
+    respondWithHomePage(response) {
+        response.sendFile(this.publicPath + '/index.html');
+    }
+
+    setupViews() {
+        this.app.get('/login', (request, response) => {
+            this.authentication.checkRequest(
+                request,
+                () => response.redirect('/'),
+                () => this.respondWithHomePage(response)
+            );
+        });
+
+        this.app.get('/', (request, response) => {
+            this.authentication.checkRequest(
+                request,
+                () => this.respondWithHomePage(response),
+                () => response.redirect('/login')
+            );
+        });
+
+        this.app.post('/logout', (request, response) => {
+            response.clearCookie('user-id');
+
+            response.redirect('/login');
+        });
+
+        this.app.use('/', express.static(this.publicPath));
+    }
+
+    exposePublicPaths() {
+        this.authentication.expose('/api/authentication', 'POST');
+    }
+
+    injectAuth() {
+        this.app.use((request, response, next) => {
+            this.authentication.checkRequest(
+                request,
+                () => next(),
+                () => response.code(401).send({ message: 'Not authorized' })
+            );
+        });
+    }
+
+    setupApi() {
+        this.controllers.forEach(controller => {
+            this.app.use('/api/' + controller, require('./' + controller));
+        });
+
+        this.app.use('/api/*', (request, response, next) => {
+            next(new NotFound());
+        });
+    }
+
+    handleErrors() {
+        this.app.use(errorHandler);
     }
 }

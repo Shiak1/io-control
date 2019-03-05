@@ -15,5 +15,7 @@ function handleError(error) {
         return error;
     }
 
+    console.error(error);
+
     return { code: 500, message: 'Oops! Something went wrong!' };
 }
