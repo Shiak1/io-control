@@ -1,9 +1,13 @@
-const router = require('./router');
-const mongoose = require('mongoose');
-const process = require('process');
-const express = require('express');
 const db = require('./services/db');
+const express = require('express');
+const mongoose = require('mongoose');
 const path = require('path');
+const process = require('process');
+const router = require('./router');
+
+const {
+    app: { port },
+} = require('./config');
 
 const app = express();
 
@@ -12,7 +16,7 @@ async function boot() {
 
     router(app, path.join(__dirname, 'frontend/dist'));
 
-    app.listen(500);
+    app.listen(port);
 }
 
 boot()

@@ -1,4 +1,7 @@
 {
+	"app": {
+		"port": 80
+	},
 	"db": {
 		"URI": "mongodb://localhost/io-control"
 	},
