@@ -10,7 +10,7 @@ class Router {
     constructor(app, publicPath) {
         this.app = app;
         this.publicPath = publicPath;
-        this.controllers = ['authentication'];
+        this.controllers = ['authentication', 'user'];
 
         this.authentication = authentication(app);
 
