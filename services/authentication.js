@@ -11,7 +11,7 @@ module.exports = async function({ username, password }) {
 
     await user.checkPassword(password);
 
-    const { hash, ...rest } = user;
+    const { hash, ...rest } = user.toObject({ getters: true });
 
     return rest;
 };

@@ -14,7 +14,7 @@ class User {
         });
     }
 
-    static async findById(id) {
+    static async findOrFail(id) {
         return tap(await this.findById(id), user => {
             NotFound.throwUnless(user, 'User not found');
         });
@@ -25,7 +25,11 @@ class User {
 
         await user.setPassword(password);
 
-        return await user.save();
+        try {
+            return await user.save();
+        } catch (_) {
+            throw new Validation('User already exists');
+        }
     }
 
     static async createIfNotExists(user) {
@@ -40,17 +44,41 @@ class User {
         }
     }
 
+    static list() {
+        return this.find().select('-hash');
+    }
+
+    static async delete(id) {
+        const user = await this.findOrFail(id);
+
+        Validation.throwIf(user.role == 'Admin', 'Cannot delete admin user');
+
+        await user.remove();
+    }
+
+    static async update({ id, password, ...update }) {
+        const user = await this.findOrFail(id);
+
+        if (password) {
+            await user.setPassword(password);
+        }
+
+        for (const [key, value] of Object.entries(update)) {
+            user[key] = value;
+        }
+
+        return await user.save();
+    }
+
     async checkPassword(password) {
         try {
             await new Password(password).authenticate(this.hash);
-        } catch {
+        } catch (_) {
             throw new Validation('Password mismatch');
         }
     }
 
-    async changePassword(current, value) {
-        await this.checkPassword(current);
-
+    async changePassword(value) {
         await this.setPassword(value);
 
         await this.save();
@@ -58,6 +86,34 @@ class User {
 
     async setPassword(password) {
         this.hash = await new Password(password).hash();
+    }
+
+    get homePage() {
+        return '/users';
+    }
+
+    get fullName() {
+        return [this.name.first, this.name.last].filter(name => !!name).join(' ');
+    }
+
+    set fullName(value) {
+        if (value) {
+            const [first, last] = value.split(' ').filter(v => !!v);
+
+            this.setName(first, last);
+        } else {
+            this.setName();
+        }
+    }
+
+    setName(first = '', last = '') {
+        this.name = { first, last };
+    }
+
+    data() {
+        const { hash, ...rest } = this.toObject({ getters: true });
+
+        return rest;
     }
 }
 

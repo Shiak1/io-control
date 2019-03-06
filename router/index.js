@@ -35,12 +35,20 @@ class Router {
         this.app.get('/login', (request, response) => {
             this.authentication.checkRequest(
                 request,
-                () => response.redirect('/'),
+                () => response.redirect(request.session.user.homePage),
                 () => this.respondWithHomePage(response)
             );
         });
 
         this.app.get('/', (request, response) => {
+            this.authentication.checkRequest(
+                request,
+                () => response.redirect(request.session.user.homePage),
+                () => response.redirect('/login')
+            );
+        });
+
+        this.app.get('/users', (request, response) => {
             this.authentication.checkRequest(
                 request,
                 () => this.respondWithHomePage(response),
@@ -66,7 +74,7 @@ class Router {
             this.authentication.checkRequest(
                 request,
                 () => next(),
-                () => response.code(401).send({ message: 'Not authorized' })
+                () => response.status(401).send({ message: 'Not authorized' })
             );
         });
     }
