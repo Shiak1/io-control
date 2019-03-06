@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import http from '../services/http';
 export default {
     data() {
         return {
@@ -60,10 +61,8 @@ export default {
         },
         async submit() {
             try {
-                await this.$http.post('api/authentication', this.form);
-
-                this.$router.push('/');
-            } catch ({ data: { message } }) {
+                await http.post('api/authentication', this.form);
+            } catch ({ message }) {
                 this.setError(message);
             }
         },

@@ -15,12 +15,11 @@
 	</div>
 </template>
 <script>
+import http from '../services/http';
 export default {
 	methods: {
 		async logout() {
-			await this.$http.post('/logout');
-
-			this.$router.push('/login');
+			await http.post('/logout');
 		},
 	},
 };
