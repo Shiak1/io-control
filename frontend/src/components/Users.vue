@@ -1,6 +1,16 @@
 <template>
-    <b-container class="mt-5">
-        <b-row>
+    <b-container>
+        <b-row class="mt-3">
+            <b-col sm="auto"></b-col>
+            <b-col>
+                <b-button class="float-right" variant="outline-info" @click="logout"
+                    >Logout</b-button
+                >
+            </b-col>
+            <b-col sm="auto"></b-col>
+        </b-row>
+
+        <b-row class="mt-3">
             <b-col sm="auto"></b-col>
             <b-col>
                 <b-table bordered :items="users" :fields="fields">
@@ -135,6 +145,9 @@ export default {
         reset() {
             this.modal.user = {};
             this.modal.deleting = false;
+        },
+        async logout() {
+            await http.post('/logout');
         },
     },
     async created() {
