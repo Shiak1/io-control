@@ -1,0 +1,9 @@
+{
+	// Comments are supported
+	"uid": "io-control",
+	"append": true,
+	"watch": true,
+	"killTree": true,
+	"script": "server.js",
+	"sourceDir": "C:\\Dev\\private\\projects\\io-control"
+}
