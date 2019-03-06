@@ -1,3 +1,7 @@
+.clickable:hover {
+    cursor: pointer;
+}
+
 .flex {
     display: -webkit-box;
     display: -moz-box;
