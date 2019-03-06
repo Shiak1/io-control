@@ -1,6 +1,9 @@
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
+const Role = require('../services/role');
+const { Unauthorized, Unauthenticated } = require('../exceptions');
+
 const {
     auth: { secret },
 } = require('../config.json');
@@ -77,11 +80,22 @@ class Authentication {
         return cookies['user-id'] && session.user;
     }
 
+    isAuthorized({
+        session: {
+            user: { role },
+        },
+        path,
+    }) {
+        return Role.isAuthorized(role, path);
+    }
+
     checkRequest(request, passed, failed) {
-        if (this.isExposed(request) || this.isAuthenticated(request)) {
-            passed();
+        if (this.isExposed(request)) return;
+
+        if (this.isAuthenticated(request)) {
+            Unauthorized.throwUnless(this.isAuthorized(request));
         } else {
-            failed();
+            throw new Unauthenticated('Not logged in');
         }
     }
 }

@@ -1,4 +1,5 @@
 const router = require('express').Router();
+
 const authentication = require('../services/authentication');
 const Unauthenticated = require('../exceptions/unauthenticated');
 

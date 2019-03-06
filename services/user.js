@@ -88,10 +88,6 @@ class User {
         this.hash = await new Password(password).hash();
     }
 
-    get homePage() {
-        return '/users';
-    }
-
     get fullName() {
         return [this.name.first, this.name.last].filter(name => !!name).join(' ');
     }

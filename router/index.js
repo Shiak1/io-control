@@ -1,7 +1,8 @@
 const body = require('body-parser');
 const express = require('express');
 
-const { NotFound } = require('../exceptions');
+const Role = require('../services/role');
+const { NotFound, Unauthenticated, Unauthorized } = require('../exceptions');
 const { errorHandler, authentication } = require('../middleware');
 
 module.exports = (app, publicPath) => new Router(app, publicPath);
@@ -31,29 +32,49 @@ class Router {
         response.sendFile(this.publicPath + '/index.html');
     }
 
+    getUserRole({
+        session: {
+            user: { role },
+        },
+    }) {
+        return Role.get(role);
+    }
+
+    getDefaultView(request) {
+        return '/' + this.getUserRole(request).defaultView;
+    }
+
     setupViews() {
         this.app.get('/login', (request, response) => {
-            this.authentication.checkRequest(
-                request,
-                () => response.redirect(request.session.user.homePage),
-                () => this.respondWithHomePage(response)
-            );
+            try {
+                this.authentication.checkRequest(request);
+
+                response.redirect(this.getDefaultView(request));
+            } catch (error) {
+                Unauthenticated.handle(error, () => this.respondWithHomePage(response));
+            }
         });
 
         this.app.get('/', (request, response) => {
-            this.authentication.checkRequest(
-                request,
-                () => response.redirect(request.session.user.homePage),
-                () => response.redirect('/login')
-            );
+            try {
+                this.authentication.checkRequest(request);
+
+                response.redirect(this.getDefaultView(request));
+            } catch (error) {
+                console.log(error);
+                Unauthenticated.handle(error, () => response.redirect('/login'));
+            }
         });
 
-        this.app.get('/users', (request, response) => {
-            this.authentication.checkRequest(
-                request,
-                () => this.respondWithHomePage(response),
-                () => response.redirect('/login')
-            );
+        this.app.get('/users|devices', (request, response) => {
+            try {
+                this.authentication.checkRequest(request);
+
+                this.respondWithHomePage(response);
+            } catch (error) {
+                Unauthenticated.handle(error, () => response.redirect('/login'));
+                Unauthorized.handle(error, () => response.redirect(this.getDefaultView(request)));
+            }
         });
 
         this.app.post('/logout', (request, response) => {
@@ -71,11 +92,18 @@ class Router {
 
     injectAuth() {
         this.app.use((request, response, next) => {
-            this.authentication.checkRequest(
-                request,
-                () => next(),
-                () => response.status(401).send({ message: 'Not authorized' })
-            );
+            try {
+                this.authentication.checkRequest(request);
+
+                next();
+            } catch (error) {
+                Unauthenticated.handle(error, () =>
+                    response.status(401).send({ message: 'Not logged in' })
+                );
+                Unauthorized.handle(error, () =>
+                    response.status(403).send({ message: 'Unauthorized' })
+                );
+            }
         });
     }
 

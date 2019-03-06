@@ -1,7 +1,7 @@
 const Base = require('./base');
 
 module.exports = class Unauthenticated extends Base {
-    constructor(message = 'Invalid username or password') {
-        super(401, message);
+    constructor(message = 'Unauthorized') {
+        super(403, message);
     }
 };

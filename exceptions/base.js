@@ -16,4 +16,10 @@ module.exports = class Base extends Error {
 
         throw new this(...params);
     }
+
+    static handle(error, callback) {
+        if (error instanceof this) {
+            callback();
+        }
+    }
 };
