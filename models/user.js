@@ -14,5 +14,6 @@ module.exports = new Schema({
 		type: String,
 		enum: ['Admin', 'Manager', 'User'],
 		required: true,
+		default: 'User',
 	},
 });
