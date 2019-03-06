@@ -59,7 +59,7 @@ export default {
                 {
                     key: 'fullName',
                     sortable: true,
-                    lable: 'Name',
+                    label: 'Name',
                 },
                 {
                     key: 'username',
