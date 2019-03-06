@@ -3,16 +3,6 @@
         <b-row class="mt-3">
             <b-col sm="auto"></b-col>
             <b-col>
-                <b-button class="float-right" variant="outline-info" @click="logout"
-                    >Logout</b-button
-                >
-            </b-col>
-            <b-col sm="auto"></b-col>
-        </b-row>
-
-        <b-row class="mt-3">
-            <b-col sm="auto"></b-col>
-            <b-col>
                 <b-table bordered :items="users" :fields="fields">
                     <template slot="role" slot-scope="row">
                         {{ row.value }}
