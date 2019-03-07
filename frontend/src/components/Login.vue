@@ -1,7 +1,7 @@
 <template>
     <div class="flex">
         <div class="vertical-center">
-            <b-card class="mb-2" align="center" title="Login">
+            <b-card class="mb-2 text-primary" align="center" title="👋">
                 <b-alert show variant="danger" v-if="error">{{ error }}</b-alert>
                 <b-form-group>
                     <b-form-input
@@ -22,7 +22,7 @@
                 </b-form-group>
 
                 <b-form-group>
-                    <b-button type="submit" variant="primary" block @click="login">Next</b-button>
+                    <b-button type="submit" variant="outline-primary" block @click="login">Next</b-button>
                 </b-form-group>
             </b-card>
         </div>
