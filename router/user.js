@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const User = require('../services/user');
 
+const { Validation } = require('../services');
+
 router.get('/', async (request, response) => {
     const users = (await User.list()).map(user => user.data());
 
@@ -20,6 +22,9 @@ router.delete('/:id', async (request, response, next) => {
 router.put('/:id', async (request, response, next) => {
     try {
         const {
+            session: {
+                user: { id: currentUser },
+            },
             params: { id },
             body: { fullName, password },
         } = request;
@@ -30,6 +35,10 @@ router.put('/:id', async (request, response, next) => {
             fullName,
         };
 
+        const { role } = await User.findOrFail(id);
+
+        Validation.throwIf(role == 'Admin' && id != currentUser);
+
         response.send({ data: (await User.update(update)).data() });
     } catch (error) {
         next(error);
@@ -39,11 +48,11 @@ router.put('/:id', async (request, response, next) => {
 router.post('/', async (request, response, next) => {
     try {
         const {
-            body: { fullName, password, username },
+            body: { fullName, password, username, role },
         } = request;
 
         response.send({
-            data: (await User.create({ fullName, password, username })).data(),
+            data: (await User.create({ fullName, password, username, role })).data(),
         });
     } catch (error) {
         next(error);

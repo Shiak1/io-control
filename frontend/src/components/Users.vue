@@ -31,17 +31,24 @@
                 <b-form-input v-model="modal.user.fullName" trim />
             </b-form-group>
             <b-form-group label="Username">
-                <b-form-input v-model="modal.user.username" :disabled="!!modal.user.id" trim />
+                <b-form-input v-model="modal.user.username" :disabled="isEditing" trim />
             </b-form-group>
             <b-form-group label="Password">
                 <b-form-input v-model="modal.user.password" trim />
+            </b-form-group>
+            <b-form-group label="Role" v-if="!this.isAdmin">
+                <b-form-select
+                    v-model="modal.user.role"
+                    :options="roles"
+                    :disabled="isEditing"
+                ></b-form-select>
             </b-form-group>
             <template slot="modal-footer">
                 <b-button
                     class="float-right"
                     v-bind:class="{ 'btn-warning': !modal.deleting, 'btn-danger': modal.deleting }"
                     @click="remove()"
-                    v-if="modal.user.id && modal.user.role != 'Admin'"
+                    v-if="isEditing && !isAdmin"
                     >Delete</b-button
                 >
                 <b-button class="float-right" variant="primary" @click="save()">Save</b-button>
@@ -52,9 +59,11 @@
 
 <script>
 import http from '../services/http';
+
 export default {
     data() {
         return {
+            roles: ['Manager', 'User'],
             fields: [
                 {
                     key: 'fullName',
@@ -79,10 +88,16 @@ export default {
         };
     },
     computed: {
+        isAdmin() {
+            return this.modal.user.role == 'Admin';
+        },
+        isEditing() {
+            return !!this.modal.user.id;
+        },
         modalTitle() {
-            const user = this.modal.user;
+            const { fullName, username } = this.modal.user;
 
-            return user.id ? user.fullName || user.username : 'New user';
+            return this.isEditing ? fullName || username : 'New user';
         },
     },
     methods: {
@@ -100,8 +115,8 @@ export default {
             this.$root.$emit('bv::show::modal', 'user');
         },
         async save() {
-            const { id, username, fullName, password, original } = this.modal.user;
-            const form = { username, fullName, password };
+            const { id, username, fullName, password, role, original } = this.modal.user;
+            const form = { username, fullName, password, role };
 
             try {
                 if (id) {
