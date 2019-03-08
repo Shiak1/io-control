@@ -20,9 +20,10 @@
 
         <b-row class="mt-3">
             <b-col></b-col>
-            <b-col cols="6"
-                ><b-button variant="primary" block @click="create">Add user</b-button></b-col
-            >
+            <b-col cols="2"
+                ><b-button variant="outline-primary" block size="lg" @click="create"
+                    ><span class="oi oi-plus" title="plus" aria-hidden="true"></span></b-button
+            ></b-col>
             <b-col></b-col>
         </b-row>
 
@@ -150,9 +151,6 @@ export default {
         reset() {
             this.modal.user = {};
             this.modal.deleting = false;
-        },
-        async logout() {
-            await http.post('/logout');
         },
     },
     async created() {
