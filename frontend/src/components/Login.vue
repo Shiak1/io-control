@@ -9,6 +9,9 @@
                         type="text"
                         v-model="form.username"
                         placeholder="Username"
+                        autofocus
+                        ref="username"
+                        v-on:keyup.enter="enter('username')"
                     />
                 </b-form-group>
 
@@ -18,11 +21,15 @@
                         type="password"
                         v-model="form.password"
                         placeholder="Password"
+                        ref="password"
+                        v-on:keyup.enter="enter('password')"
                     />
                 </b-form-group>
 
                 <b-form-group>
-                    <b-button type="submit" variant="outline-primary" block @click="login">Next</b-button>
+                    <b-button type="submit" variant="outline-primary" block @click="login"
+                        >Next</b-button
+                    >
                 </b-form-group>
             </b-card>
         </div>
@@ -49,6 +56,25 @@ export default {
         },
         setError(message) {
             this.error = message;
+        },
+        enter(fieldName) {
+            const empty = Object.entries(this.form)
+                .map(([name, value]) => {
+                    return {
+                        input: this.$refs[name],
+                        value,
+                        name,
+                    };
+                })
+                .filter(field => !field.value);
+
+            if (empty.length) {
+                if (empty.some(field => field.name == fieldName)) return;
+
+                empty[0].input.focus();
+            } else {
+                this.login();
+            }
         },
         async login() {
             this.setError('');
