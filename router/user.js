@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const User = require('../services/user');
 
-const { Validation } = require('../services');
+const { Validation } = require('../exceptions');
 
 router.get('/', async (request, response) => {
     const users = (await User.list()).map(user => user.data());
