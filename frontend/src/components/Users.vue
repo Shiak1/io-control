@@ -20,7 +20,7 @@
 
         <b-row class="mt-3">
             <b-col></b-col>
-            <b-col cols="2"
+            <b-col
                 ><b-button variant="outline-primary" block size="lg" @click="create"
                     ><span class="oi oi-plus" title="plus" aria-hidden="true"></span></b-button
             ></b-col>
