@@ -4,13 +4,11 @@ export default () => ({
 		ip: '',
 		source: {
 			options: ['select', 'new'],
-			value: '',
+			value: 'select',
 		},
 	},
 	name: '',
 	relay: '',
-	type: {
-		value: '',
-		options: ['Door', 'Elevator'],
-	},
+	group: '',
+	type: null,
 });
