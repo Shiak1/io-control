@@ -1,21 +1,16 @@
 const mongoose = require('mongoose');
+const Model = require('./model');
 const Password = require('./password');
 const schema = require('../models/user');
 const tap = require('../utils/tap');
 
 const { NotFound, Validation } = require('../exceptions');
 
-class User {
+class User extends Model {
     static async findByUsername(username) {
         const query = { username: new RegExp(`^${username}$`, 'i') };
 
         return tap(await this.findOne(query), user => {
-            NotFound.throwUnless(user, 'User not found');
-        });
-    }
-
-    static async findOrFail(id) {
-        return tap(await this.findById(id), user => {
             NotFound.throwUnless(user, 'User not found');
         });
     }
@@ -107,7 +102,7 @@ class User {
     }
 
     data() {
-        const { hash, ...rest } = this.toObject({ getters: true });
+        const { hash, ...rest } = super.data();
 
         return rest;
     }

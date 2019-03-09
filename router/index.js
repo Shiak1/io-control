@@ -11,7 +11,7 @@ class Router {
     constructor(app, publicPath) {
         this.app = app;
         this.publicPath = publicPath;
-        this.controllers = ['authentication', 'user'];
+        this.controllers = ['authentication', 'user', 'device'];
 
         this.authentication = authentication(app);
 
@@ -61,7 +61,6 @@ class Router {
 
                 response.redirect(this.getDefaultView(request));
             } catch (error) {
-                console.log(error);
                 Unauthenticated.handle(error, () => response.redirect('/login'));
             }
         });

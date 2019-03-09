@@ -49,7 +49,7 @@ class Manager extends Admin {}
 
 class User extends Role {
     get views() {
-        return ['device'];
+        return ['devices'];
     }
 
     get resources() {
