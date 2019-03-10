@@ -1,104 +1,113 @@
 <template>
-    <b-modal id="device" :title="title" @shown="setup()">
-        <div v-if="showing('Controller')">
-            <b-form-group v-if="controller.source == 'select'">
-                <b-form-select v-model="controller.selected">
-                    <option :value="{}" disabled hidden>Select</option>
-                    <option v-for="option in controller.options" v-bind:value="option">{{
-                        option.name
-                    }}</option>
-                </b-form-select>
+    <b-row>
+        <b-col></b-col>
+        <b-col cols="6"
+            ><b-button variant="outline-primary" block @click="$refs.modal.show()"
+                ><span class="oi oi-plus" title="plus" aria-hidden="true"></span></b-button
+        ></b-col>
+        <b-col></b-col>
+
+        <b-modal ref="modal" :title="title" @shown="setup()">
+            <div v-if="showing('Controller')">
+                <b-form-group v-if="controller.source == 'select'">
+                    <b-form-select v-model="controller.selected">
+                        <option :value="{}" disabled hidden>Select</option>
+                        <option v-for="option in controller.options" v-bind:value="option">{{
+                            option.name
+                        }}</option>
+                    </b-form-select>
+                    <b-button
+                        block
+                        size="sm"
+                        variant="link"
+                        class="mt-0"
+                        @click="controller.source.value = 'new'"
+                    >
+                        New
+                    </b-button>
+                </b-form-group>
+                <div class="form-label-group" v-if="controller.source == 'new'">
+                    <b-form-input
+                        id="controller-name"
+                        v-model="controller.selected.name"
+                        placeholder="Name"
+                    />
+                    <label for="controller-name">Name</label>
+                </div>
+                <div class="form-label-group" v-if="controller.source == 'new'">
+                    <b-form-input
+                        id="controller-ip"
+                        v-model="controller.selected.ip"
+                        placeholder="IP"
+                    />
+                    <label for="controller-ip">IP</label>
+
+                    <b-button
+                        block
+                        size="sm"
+                        variant="link"
+                        class="mt-0"
+                        @click="controller.source.value = 'select'"
+                        v-if="controller.options.length"
+                    >
+                        Select
+                    </b-button>
+                </div>
+            </div>
+
+            <div v-if="showing('Device')">
+                <div class="form-label-group">
+                    <b-form-input id="new-device-name" v-model="name" placeholder="Name" trim />
+                    <label for="new-device-name">Name</label>
+                </div>
+                <div class="form-label-group">
+                    <b-form-input id="new-device-relay" v-model="relay" placeholder="Relay" trim />
+                    <label for="new-device-relay">Relay</label>
+                </div>
+                <div class="form-label-group">
+                    <b-form-input id="new-device-group" v-model="group" placeholder="Group" trim />
+                    <label for="new-device-group">Group</label>
+                </div>
+                <div class="form-label-group">
+                    <b-form-select v-model="type">
+                        <template slot="first">
+                            <option :value="null" hidden disabled>Type</option>
+                        </template>
+
+                        <option value="Door">Door</option>
+                        <option value="Elevator">Elevator</option>
+                    </b-form-select>
+                </div>
+            </div>
+
+            <template slot="modal-footer">
                 <b-button
-                    block
-                    size="sm"
-                    variant="link"
-                    class="mt-0"
-                    @click="controller.source.value = 'new'"
+                    v-if="showing('Controller')"
+                    class="float-right"
+                    variant="primary"
+                    @click="show('Device')"
+                    :disabled="!controllerSelected"
+                    >Next</b-button
                 >
-                    New
-                </b-button>
-            </b-form-group>
-            <div class="form-label-group" v-if="controller.source == 'new'">
-                <b-form-input
-                    id="controller-name"
-                    v-model="controller.selected.name"
-                    placeholder="Name"
-                />
-                <label for="controller-name">Name</label>
-            </div>
-            <div class="form-label-group" v-if="controller.source == 'new'">
-                <b-form-input
-                    id="controller-ip"
-                    v-model="controller.selected.ip"
-                    placeholder="IP"
-                />
-                <label for="controller-ip">IP</label>
 
                 <b-button
-                    block
-                    size="sm"
-                    variant="link"
-                    class="mt-0"
-                    @click="controller.source.value = 'select'"
-                    v-if="controller.options.length"
+                    v-if="showing('Device')"
+                    class="float-right"
+                    variant="secondary"
+                    @click="show('Controller')"
+                    >Back</b-button
                 >
-                    Select
-                </b-button>
-            </div>
-        </div>
-
-        <div v-if="showing('Device')">
-            <div class="form-label-group">
-                <b-form-input id="new-device-name" v-model="name" placeholder="Name" trim />
-                <label for="new-device-name">Name</label>
-            </div>
-            <div class="form-label-group">
-                <b-form-input id="new-device-relay" v-model="relay" placeholder="Relay" trim />
-                <label for="new-device-relay">Relay</label>
-            </div>
-            <div class="form-label-group">
-                <b-form-input id="new-device-group" v-model="group" placeholder="Group" trim />
-                <label for="new-device-group">Group</label>
-            </div>
-            <div class="form-label-group">
-                <b-form-select v-model="type">
-                    <template slot="first">
-                        <option :value="null" hidden disabled>Type</option>
-                    </template>
-
-                    <option value="Door">Door</option>
-                    <option value="Elevator">Elevator</option>
-                </b-form-select>
-            </div>
-        </div>
-
-        <template slot="modal-footer">
-            <b-button
-                v-if="showing('Controller')"
-                class="float-right"
-                variant="primary"
-                @click="show('Device')"
-                :disabled="!controllerSelected"
-                >Next</b-button
-            >
-
-            <b-button
-                v-if="showing('Device')"
-                class="float-right"
-                variant="secondary"
-                @click="show('Controller')"
-                >Back</b-button
-            >
-            <b-button
-                v-if="showing('Device')"
-                class="float-right"
-                variant="primary"
-                @click="save()"
-                :disabled="!deviceEntered"
-                >Save</b-button
-            >
-        </template>
-    </b-modal>
+                <b-button
+                    v-if="showing('Device')"
+                    class="float-right"
+                    variant="primary"
+                    @click="save()"
+                    :disabled="!deviceEntered"
+                    >Save</b-button
+                >
+            </template>
+        </b-modal>
+    </b-row>
 </template>
 
 <script>
@@ -154,7 +163,7 @@ export default {
 
             this.$emit('saved', form);
 
-            this.$root.$emit('bv::hide::modal', 'device');
+            this.$refs.modal.hide();
         },
 
         async loadControllers() {

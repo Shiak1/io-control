@@ -14,15 +14,6 @@
             <b-col sm="auto"></b-col>
         </b-row>
 
-        <b-row>
-            <b-col></b-col>
-            <b-col cols="6"
-                ><b-button variant="outline-primary" block @click="create"
-                    ><span class="oi oi-plus" title="plus" aria-hidden="true"></span></b-button
-            ></b-col>
-            <b-col></b-col>
-        </b-row>
-
         <new-device v-on:saved="device => this.devices.push(device)"></new-device>
     </b-container>
 </template>
@@ -54,7 +45,6 @@ export default {
                 },
             ],
             devices: [],
-            edit: {},
         };
     },
     methods: {
@@ -62,9 +52,6 @@ export default {
             const { data } = await http.get('/api/device');
 
             this.devices = data;
-        },
-        async create() {
-            this.$root.$emit('bv::show::modal', 'device');
         },
     },
     components: {
