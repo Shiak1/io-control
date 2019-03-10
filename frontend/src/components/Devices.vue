@@ -5,7 +5,9 @@
             <b-col>
                 <b-table bordered :items="devices" :fields="fields">
                     <template slot="actions" slot-scope="row">
-                        <b-button variant="success" @click="open(row.item)"></b-button>
+                        <b-button size="sm" variant="success" @click="open(row.item)"
+                            >Open</b-button
+                        >
                     </template>
                 </b-table>
             </b-col>
@@ -21,82 +23,13 @@
             <b-col></b-col>
         </b-row>
 
-        <b-modal id="device" title="New device" @hidden="reset()">
-            <legend
-                tabindex="-1"
-                class="font-weight-bold col-form-label pt-0"
-                id="__BVID__6__BV_label_"
-            >
-                Controller
-            </legend>
-            <b-form-group v-if="add.controller.source.value == 'select'">
-                <b-form-select v-model="add.controller.name" />
-                <b-button
-                    block
-                    size="sm"
-                    variant="link"
-                    class="mt-0"
-                    @click="add.controller.source.value = 'new'"
-                >
-                    New
-                </b-button>
-            </b-form-group>
-            <div class="form-label-group" v-if="add.controller.source.value == 'new'">
-                <b-form-input
-                    id="controller-name"
-                    v-model="add.controller.name"
-                    placeholder="Name"
-                />
-                <label for="controller-name">Name</label>
-            </div>
-            <div class="form-label-group" v-if="add.controller.source.value == 'new'">
-                <b-form-input id="controller-ip" v-model="add.controller.ip" placeholder="IP" />
-                <label for="controller-ip">IP</label>
-
-                <b-button
-                    block
-                    size="sm"
-                    variant="link"
-                    class="mt-0"
-                    @click="add.controller.source.value = 'select'"
-                >
-                    Select
-                </b-button>
-            </div>
-
-            <div class="form-label-group">
-                <b-form-input id="new-device-name" v-model="add.name" placeholder="Name" trim />
-                <label for="new-device-name">Name</label>
-            </div>
-            <div class="form-label-group">
-                <b-form-input id="new-device-relay" v-model="add.relay" placeholder="Relay" trim />
-                <label for="new-device-relay">Relay</label>
-            </div>
-            <div class="form-label-group">
-                <b-form-input id="new-device-group" v-model="add.group" placeholder="Group" trim />
-                <label for="new-device-group">Group</label>
-            </div>
-            <div class="form-label-group">
-                <b-form-select v-model="add.type">
-                    <template slot="first">
-                        <option :value="null" hidden disabled>Type</option>
-                    </template>
-
-                    <option value="Door">Door</option>
-                    <option value="Elevator">Elevator</option>
-                </b-form-select>
-            </div>
-
-            <template slot="modal-footer">
-                <b-button class="float-right" variant="primary" @click="saveNew()">Save</b-button>
-            </template>
-        </b-modal>
+        <new-device v-on:saved="device => this.devices.push(device)"></new-device>
     </b-container>
 </template>
 
 <script>
 import http from '../services/http';
-import addStub from '../stubs/device';
+import NewDevice from './new-device';
 
 export default {
     data() {
@@ -113,7 +46,6 @@ export default {
             ],
             devices: [],
             edit: {},
-            add: addStub(),
         };
     },
     methods: {
@@ -125,11 +57,9 @@ export default {
         async create() {
             this.$root.$emit('bv::show::modal', 'device');
         },
-        reset() {
-            this.add = addStub();
-            this.edit = {};
-        },
-        saveNew() {},
+    },
+    components: {
+        NewDevice,
     },
     async created() {
         await this.load();

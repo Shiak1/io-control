@@ -1,11 +1,8 @@
 export default () => ({
 	controller: {
-		name: '',
-		ip: '',
-		source: {
-			options: ['select', 'new'],
-			value: 'select',
-		},
+		options: [],
+		selected: {},
+		source: '',
 	},
 	name: '',
 	relay: '',

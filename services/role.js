@@ -41,11 +41,15 @@ class Admin extends Role {
     }
 
     get resources() {
-        return ['user', 'device'];
+        return ['user', 'device', 'controllers'];
     }
 }
 
-class Manager extends Admin {}
+class Manager extends Admin {
+    get resources() {
+        return ['user', 'device'];
+    }
+}
 
 class User extends Role {
     get views() {
