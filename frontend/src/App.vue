@@ -9,13 +9,13 @@
                             <b-nav-item
                                 active-class="active"
                                 v-for="view in views"
-                                v-bind:to="'/' + view"
-                                >{{ view[0].toUpperCase() + view.slice(1) }}
+                                v-bind:to="view.route"
+                                ><span :class="'oi ' + view.icon"></span>
                             </b-nav-item>
                         </b-nav>
                         <b-button class="float-right" variant="outline-info" @click="logout()"
-                            >Logout</b-button
-                        >
+                            ><span class="oi oi-account-logout"></span
+                        ></b-button>
                     </div>
                 </b-col>
                 <b-col sm="auto"></b-col>
@@ -27,6 +27,11 @@
 
 <script>
 import http from './services/http';
+
+const iconMap = {
+    users: 'oi-person',
+    devices: 'oi-terminal',
+};
 
 export default {
     data: () => ({ views: [] }),
@@ -43,7 +48,10 @@ export default {
         async loadViews() {
             if (!this.loggedIn()) return;
 
-            this.views = (await http.get('/api/views')).data;
+            this.views = (await http.get('/api/views')).data.map(view => ({
+                route: '/' + view,
+                icon: iconMap[view],
+            }));
         },
     },
     created() {

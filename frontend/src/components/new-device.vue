@@ -21,7 +21,7 @@
                         size="sm"
                         variant="link"
                         class="mt-0"
-                        @click="controller.source.value = 'new'"
+                        @click="setControllerSource('new')"
                     >
                         New
                     </b-button>
@@ -47,7 +47,7 @@
                         size="sm"
                         variant="link"
                         class="mt-0"
-                        @click="controller.source.value = 'select'"
+                        @click="setControllerSource('select')"
                         v-if="controller.options.length"
                     >
                         Select
@@ -133,6 +133,11 @@ export default {
         },
     },
     methods: {
+        setControllerSource(source) {
+            this.controller.source = source;
+
+            this.controller.selected = {};
+        },
         show(step) {
             this.title = step;
         },
@@ -159,7 +164,7 @@ export default {
                 group,
             };
 
-            await http.post('/api/device', form);
+            form._id = (await http.post('/api/device', form)).data._id;
 
             this.$emit('saved', form);
 

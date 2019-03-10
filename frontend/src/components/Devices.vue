@@ -5,9 +5,9 @@
             <b-col>
                 <b-table bordered :items="devices" :fields="fields">
                     <template slot="actions" slot-scope="row">
-                        <b-button size="sm" variant="success" @click="open(row.item)"
-                            >Open</b-button
-                        >
+                        <a class="mr-1 text-success" href="#" @click="open(row.item)">Open</a>
+                        <a class="mr-1 text-danger" href="#" @click="close(row.item)">Close</a>
+                        <a class="text-primary" href="#" @click="pulse(row.item)">Pulse</a>
                     </template>
                 </b-table>
             </b-col>
@@ -52,6 +52,15 @@ export default {
             const { data } = await http.get('/api/device');
 
             this.devices = data;
+        },
+        async open(device) {
+            await http.post(`/api/device/${device._id}/state`, { state: 1 });
+        },
+        async close(device) {
+            await http.post(`/api/device/${device._id}/state`, { state: 0 });
+        },
+        async pulse(device) {
+            await http.post(`/api/device/${device._id}/state`, { state: 2 });
         },
     },
     components: {
