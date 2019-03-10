@@ -1,5 +1,5 @@
 <template>
-    <b-modal id="device" :title="title" @shown="setup()" @hidden="reset()">
+    <b-modal id="device" :title="title" @shown="setup()">
         <div v-if="showing('Controller')">
             <b-form-group v-if="controller.source == 'select'">
                 <b-form-select v-model="controller.selected">
