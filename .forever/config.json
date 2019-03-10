@@ -1,9 +1,0 @@
-{
-	// Comments are supported
-	"uid": "io-control",
-	"append": true,
-	"watch": true,
-	"killTree": true,
-	"script": "server.js",
-	"sourceDir": "."
-}
