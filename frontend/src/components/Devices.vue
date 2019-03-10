@@ -40,6 +40,15 @@ export default {
                     sortable: true,
                 },
                 {
+                    key: 'group',
+                    sortable: true,
+                },
+                {
+                    key: 'controller.name',
+                    sortable: true,
+                    label: 'Controller',
+                },
+                {
                     label: '',
                     key: 'actions',
                 },
