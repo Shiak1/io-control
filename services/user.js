@@ -7,6 +7,12 @@ const tap = require('../utils/tap');
 const { NotFound, Validation } = require('../exceptions');
 
 class User extends Model {
+    static async usernameExists(username) {
+        const query = { username: new RegExp(`^${username}$`, 'i') };
+
+        return (await this.count(query)) == 1;
+    }
+
     static async findByUsername(username) {
         const query = { username: new RegExp(`^${username}$`, 'i') };
 
@@ -16,6 +22,8 @@ class User extends Model {
     }
 
     static async create({ password, ...data }) {
+        Validation.throwIf(await this.usernameExists(data.username), 'User already exists');
+
         const user = new this(data);
 
         await user.setPassword(password);
@@ -28,15 +36,7 @@ class User extends Model {
     }
 
     static async createIfNotExists(user) {
-        try {
-            await this.findByUsername(user.username);
-
-            return false;
-        } catch (error) {
-            if (!(error instanceof NotFound)) throw error;
-
-            return await this.create(user);
-        }
+        return (await this.usernameExists(user.username)) ? false : await this.create(user);
     }
 
     static list() {
