@@ -1,12 +1,9 @@
 const { Schema } = require('mongoose');
 
 module.exports = new Schema({
-    username: { type: String, unique: true, required: true },
+    username: { type: String, unique: true, required: true, index: true },
     hash: { type: String, required: true },
-    name: {
-        first: { type: String },
-        last: { type: String },
-    },
+    name: { first: String, last: String },
     meta: {
         createdAt: { type: Date, default: Date.now },
     },
