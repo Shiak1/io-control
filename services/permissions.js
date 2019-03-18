@@ -16,11 +16,11 @@ class Permissions {
         if (permissions.has(action)) {
             permissions.push(role);
         } else {
-            permissions.set([role]);
+            permissions.set(action, [role]);
         }
     }
 }
 
-Permissions.add('device-add', 'Admin');
+Permissions.add('add-device', 'Admin');
 
 module.exports = Permissions;

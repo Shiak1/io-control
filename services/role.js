@@ -23,13 +23,11 @@ class Role {
     }
 
     get defaultView() {
-        console.log(this.all('views'));
         return this.all('views')[0];
     }
 
     all(key) {
         if (this.hierarchy.length) {
-            console.log(this.hierarchy);
             return [...new Set(this[key].concat(...this.hierarchy.map(role => role.all(key))))];
         } else {
             return this[key];
