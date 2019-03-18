@@ -41,6 +41,7 @@ router.put('/:id', async (request, response, next) => {
 
         response.send({ data: (await User.update(update)).data() });
     } catch (error) {
+        console.log(error);
         next(error);
     }
 });

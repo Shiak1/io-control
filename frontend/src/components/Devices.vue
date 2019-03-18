@@ -14,17 +14,23 @@
             <b-col sm="auto"></b-col>
         </b-row>
 
-        <new-device v-on:saved="device => this.devices.push(device)"></new-device>
+        <new-device
+            v-on:saved="device => this.devices.push(device)"
+            v-if="canCreateDevice"
+        ></new-device>
     </b-container>
 </template>
 
 <script>
 import http from '../services/http';
+import permissions from '../services/permissions';
+
 import NewDevice from './new-device';
 
 export default {
     data() {
         return {
+            canCreateDevice: false,
             fields: [
                 {
                     key: 'name',
@@ -62,12 +68,16 @@ export default {
         async pulse(device) {
             await http.post(`/api/device/${device._id}/state`, { state: 2 });
         },
+        async loadCanCreateDevice() {
+            this.canCreateDevice = await permissions.has('add-device');
+        },
     },
     components: {
         NewDevice,
     },
     async created() {
         await this.load();
+        await this.loadCanCreateDevice();
     },
 };
 </script>

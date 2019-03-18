@@ -18,17 +18,31 @@ class Role {
         return [];
     }
 
+    get hierarchy() {
+        return [];
+    }
+
     get defaultView() {
-        return this.views[0];
+        console.log(this.all('views'));
+        return this.all('views')[0];
+    }
+
+    all(key) {
+        if (this.hierarchy.length) {
+            console.log(this.hierarchy);
+            return [...new Set(this[key].concat(...this.hierarchy.map(role => role.all(key))))];
+        } else {
+            return this[key];
+        }
     }
 
     isAuthorized(path) {
         const [apiOrView, controller] = path.split('/').filter(v => !!v);
 
         if (apiOrView == 'api') {
-            return this.resources.includes(controller);
+            return this.all('resources').includes(controller);
         } else if (apiOrView) {
-            return this.views.includes(apiOrView);
+            return this.all('views').includes(apiOrView);
         } else {
             return true;
         }
@@ -36,18 +50,26 @@ class Role {
 }
 
 class Admin extends Role {
-    get views() {
-        return ['users', 'devices'];
+    get resources() {
+        return ['controllers'];
     }
 
-    get resources() {
-        return ['user', 'device', 'controllers', 'views'];
+    get hierarchy() {
+        return [new Manager()];
     }
 }
 
-class Manager extends Admin {
+class Manager extends Role {
+    get views() {
+        return ['users'];
+    }
+
     get resources() {
-        return ['user', 'device', 'views'];
+        return ['user'];
+    }
+
+    get hierarchy() {
+        return [new User()];
     }
 }
 
@@ -57,7 +79,7 @@ class User extends Role {
     }
 
     get resources() {
-        return ['device', 'views'];
+        return ['device', 'views', 'permissions'];
     }
 }
 
