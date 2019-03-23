@@ -106,6 +106,10 @@ class User extends Model {
 
         return rest;
     }
+
+    allowedOnDevice({ id, group }) {
+        return this.role != 'User' || this.devices.includes(id) || this.groups.includes(group);
+    }
 }
 
 schema.loadClass(User);

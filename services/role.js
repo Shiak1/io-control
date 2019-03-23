@@ -49,7 +49,7 @@ class Role {
 
 class Admin extends Role {
     get resources() {
-        return ['controllers'];
+        return ['controllers', 'log'];
     }
 
     get hierarchy() {

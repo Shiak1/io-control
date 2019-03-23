@@ -18,6 +18,7 @@ class Router {
             'controllers',
             'views',
             'permissions',
+            'log',
         ];
 
         this.authentication = authentication(app);

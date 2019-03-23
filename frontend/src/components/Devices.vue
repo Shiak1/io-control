@@ -5,8 +5,20 @@
             <b-col>
                 <b-table bordered :items="devices" :fields="fields">
                     <template slot="actions" slot-scope="row">
-                        <a class="mr-1 text-success" href="#" @click="open(row.item)">Open</a>
-                        <a class="mr-1 text-danger" href="#" @click="close(row.item)">Close</a>
+                        <a
+                            class="mr-1 text-success"
+                            href="#"
+                            @click="open(row.item)"
+                            v-if="row.item.type == 'Door'"
+                            >Open</a
+                        >
+                        <a
+                            class="mr-1 text-danger"
+                            href="#"
+                            @click="close(row.item)"
+                            v-if="row.item.type == 'Door'"
+                            >Close</a
+                        >
                         <a class="text-primary" href="#" @click="pulse(row.item)">Pulse</a>
                     </template>
                 </b-table>
