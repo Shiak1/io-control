@@ -1,6 +1,12 @@
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
+const Store = require('connect-mongo')(session);
+
+const store = new Store({
+    mongooseConnection: require('mongoose').connection,
+});
+
 const Role = require('../services/role');
 const { Unauthorized, Unauthenticated } = require('../exceptions');
 
@@ -51,6 +57,7 @@ class Authentication {
             cookie: {
                 expires: 600000,
             },
+            store,
         });
 
         this.app.use(userSession);
