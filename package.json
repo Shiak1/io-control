@@ -9,8 +9,7 @@
 		"cookie-parser": "^1.4.4",
 		"express": "^4.16.4",
 		"express-session": "^1.15.6",
-		"got": "^9.6.0",
-		"jsonwebtoken": "^8.5.0"
+		"mongoose": "~4.13.18"
 	},
 	"prettier": {
 		"tabWidth": 4,

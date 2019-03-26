@@ -1,9 +1,3 @@
-const {
-    auth: { secret },
-} = require('../config.json');
-
-const jwt = require('jsonwebtoken');
-
 const User = require('./user');
 
 module.exports = async function({ username, password }) {
