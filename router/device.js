@@ -59,7 +59,7 @@ router.post(
 
         Unauthorized.throwUnless(user.allowedOnDevice(device));
 
-        device.state(state, { username, fullName, _id });
+        await device.state(state, { username, fullName, _id });
 
         response.end();
     }
