@@ -1,5 +1,5 @@
 const http = require('http');
-const timeout = 3000;
+const timeout = 10000;
 
 module.exports = {
     request(url, method) {

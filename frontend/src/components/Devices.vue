@@ -3,40 +3,56 @@
         <b-row class="mt-3">
             <b-col sm="auto"></b-col>
             <b-col>
-                <b-table bordered :items="devices" :fields="fields">
+                <b-table outlined fixed :items="devices" :fields="fields">
                     <template slot="actions" slot-scope="row">
                         <span
                             v-b-tooltip.hover
                             title="Call"
-                            class="oi oi-elevator mr-1 text-primary clickable"
+                            class="oi oi-elevator text-primary clickable"
                             @click="pulse(row.item)"
                             v-if="row.item.type == 'Elevator'"
                         ></span>
-                        <div v-if="row.item.type == 'Door'">
-                            <a
-                                class="mr-1 text-success"
-                                href="#"
+                        <div class="d-inline" v-if="row.item.type == 'Door'">
+                            <span
+                                v-b-tooltip.hover
+                                title="Open"
+                                class="pr-2 border-right oi oi-lock-unlocked text-success clickable"
                                 @click="open(row.item)"
-                                v-if="row.item.type == 'Door'"
-                                >Open</a
                             >
-                            <a
-                                class="mr-1 text-danger"
-                                href="#"
+                            </span>
+                            <span
+                                v-b-tooltip.hover
+                                title="Close"
+                                class="pl-2 pr-2 border-right oi oi-lock-locked text-danger clickable"
                                 @click="close(row.item)"
-                                v-if="row.item.type == 'Door'"
-                                >Close</a
+                            ></span>
+                            <span
+                                v-b-tooltip.hover
+                                title="Buzz"
+                                class="pl-2 oi oi-clock text-primary clickable"
+                                @click="pulse(row.item)"
                             >
-                            <a class="text-primary" href="#" @click="pulse(row.item)">Pulse</a>
+                            </span>
                         </div>
+
+                        <span
+                            v-if="canCreateDevice"
+                            v-b-tooltip.hover
+                            title="Edit"
+                            class="oi oi-pencil clickable float-right"
+                            @click="$refs.device.showModal(row.item)"
+                        ></span>
                     </template>
+                    <template slot="edit" slot-scope="row"> </template>
                 </b-table>
             </b-col>
             <b-col sm="auto"></b-col>
         </b-row>
 
         <device-modal
-            v-on:saved="device => this.devices.push(device)"
+            ref="device"
+            v-on:saved="saved"
+            v-on:deleted="deleted"
             v-if="canCreateDevice"
         ></device-modal>
     </b-container>
@@ -52,6 +68,7 @@ export default {
     data() {
         return {
             canCreateDevice: false,
+            devices: [],
             fields: [
                 {
                     key: 'name',
@@ -70,12 +87,7 @@ export default {
                     label: '',
                     key: 'actions',
                 },
-                {
-                    label: '',
-                    key: 'edit',
-                },
             ],
-            devices: [],
         };
     },
     methods: {
@@ -84,14 +96,29 @@ export default {
 
             this.devices = data;
         },
+        saved({ id, ...rest }) {
+            const updating = this.devices.find(({ id: current }) => current == id);
+
+            if (updating) {
+                Object.assign(updating, rest);
+            } else {
+                this.devices.push({ id, ...rest });
+            }
+        },
+        deleted(id) {
+            this.devices = this.devices.filter(({ id: current }) => current != id);
+        },
         async open(device) {
-            await http.post(`/api/device/${device._id}/state`, { state: 1 });
+            await this.state(1, device);
         },
         async close(device) {
-            await http.post(`/api/device/${device._id}/state`, { state: 0 });
+            await this.state(0, device);
         },
         async pulse(device) {
-            await http.post(`/api/device/${device._id}/state`, { state: 2 });
+            await this.state(2, device);
+        },
+        state(state, { id }) {
+            return http.post(`/api/device/${id}/state`, { state });
         },
         async loadCanCreateDevice() {
             this.canCreateDevice = await permissions.has('add-device');

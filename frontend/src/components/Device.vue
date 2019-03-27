@@ -2,12 +2,12 @@
     <b-row>
         <b-col></b-col>
         <b-col cols="6"
-            ><b-button variant="outline-primary" block @click="$refs.modal.show()"
+            ><b-button variant="outline-primary" block @click="showModal()"
                 ><span class="oi oi-plus" title="plus" aria-hidden="true"></span></b-button
         ></b-col>
         <b-col></b-col>
 
-        <b-modal ref="modal" :title="title" @shown="setup()">
+        <b-modal ref="modal" :title="title">
             <div v-if="showing('Controller')">
                 <b-form-group v-if="controller.source == 'select'">
                     <b-form-select v-model="controller.selected">
@@ -61,7 +61,13 @@
                     <label for="new-device-name">Name</label>
                 </div>
                 <div class="form-label-group">
-                    <b-form-input id="new-device-relay" v-model="relay" placeholder="Relay" trim />
+                    <b-form-input
+                        id="new-device-relay"
+                        v-model="relay"
+                        placeholder="Relay"
+                        trim
+                        :disabled="this.isEditing"
+                    />
                     <label for="new-device-relay">Relay</label>
                 </div>
                 <div class="form-label-group">
@@ -91,11 +97,18 @@
                 >
 
                 <b-button
-                    v-if="showing('Device')"
+                    v-if="showing('Device') && !this.isEditing"
                     class="float-right"
                     variant="secondary"
                     @click="show('Controller')"
                     >Back</b-button
+                >
+                <b-button
+                    v-if="this.isEditing"
+                    class="float-right"
+                    v-bind:class="{ 'btn-warning': !isDeleting, 'btn-danger': isDeleting }"
+                    @click="isDeleting ? remove() : (isDeleting = true)"
+                    >Delete</b-button
                 >
                 <b-button
                     v-if="showing('Device')"
@@ -116,11 +129,14 @@ import stub from '../stubs/device';
 
 export default {
     data() {
-        const { controller, ...device } = stub();
+        const { controller, ...rest } = stub();
 
-        return { ...device, controller, title: 'Controller' };
+        return { ...rest, controller, title: 'Controller' };
     },
     computed: {
+        isEditing() {
+            return !!this.id;
+        },
         controllerSelected() {
             const { name, ip } = this.controller.selected;
 
@@ -144,6 +160,12 @@ export default {
         showing(step) {
             return this.title == step;
         },
+        fill({ controller = {}, id, name, group, type = null, relay, isDeleting = false }) {
+            this.controller = stub().controller;
+            this.controller.selected = controller;
+
+            Object.assign(this, { id, name, group, type, relay, isDeleting });
+        },
         async save() {
             const {
                 controller: { selected: controller },
@@ -164,13 +186,32 @@ export default {
                 group,
             };
 
-            form._id = (await http.post('/api/device', form)).data._id;
+            form.id = await this.createOrUpdate(form);
 
             this.$emit('saved', form);
 
             this.$refs.modal.hide();
         },
+        async createOrUpdate({ controller, name, type, relay, group }) {
+            const { data } = this.isEditing
+                ? await http.put(`/api/device/${this.id}`, { name, group, type })
+                : await http.post('/api/device', {
+                      controller,
+                      name,
+                      type,
+                      relay,
+                      group,
+                  });
 
+            return data._id;
+        },
+        async remove() {
+            await http.delete(`/api/device/${this.id}`);
+
+            this.$emit('deleted', this.id);
+
+            this.$refs.modal.hide();
+        },
         async loadControllers() {
             const controller = this.controller;
 
@@ -180,12 +221,14 @@ export default {
 
             controller.source = controllers.length ? 'select' : 'new';
         },
-        setup() {
-            Object.assign(this, stub());
+        showModal(device) {
+            this.fill(device || {});
 
             this.loadControllers();
 
-            this.show('Controller');
+            this.show(device ? 'Device' : 'Controller');
+
+            this.$refs.modal.show();
         },
     },
 };

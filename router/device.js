@@ -24,7 +24,8 @@ router.post(
                 user: { role },
             },
         },
-        response
+        response,
+        next
     ) => {
         try {
             await Permissions.try('add-device', role, async () => {
@@ -37,6 +38,53 @@ router.post(
         }
     }
 );
+
+router.put(
+    '/:id',
+    async (
+        {
+            body: { name, group, type },
+            session: {
+                user: { role },
+            },
+            params: { id },
+        },
+        response,
+        next
+    ) => {
+        try {
+            await Permissions.try('add-device', role, async () => {
+                const device = await Device.findById(id);
+
+                Validation.throwUnless(device);
+
+                Object.assign(device, { name, group, type });
+
+                await device.save();
+
+                response.send({ data: device });
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+router.delete('/:id', async ({ session: { user: { role } }, params: { id } }, response) => {
+    try {
+        await Permissions.try('add-device', role, async () => {
+            const device = await Device.findById(id);
+
+            Validation.throwUnless(device);
+
+            await device.remove();
+
+            response.send({ data: device });
+        });
+    } catch (error) {
+        next(error);
+    }
+});
 
 router.post(
     '/:id/state',
