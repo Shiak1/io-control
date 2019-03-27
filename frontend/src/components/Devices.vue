@@ -5,31 +5,40 @@
             <b-col>
                 <b-table bordered :items="devices" :fields="fields">
                     <template slot="actions" slot-scope="row">
-                        <a
-                            class="mr-1 text-success"
-                            href="#"
-                            @click="open(row.item)"
-                            v-if="row.item.type == 'Door'"
-                            >Open</a
-                        >
-                        <a
-                            class="mr-1 text-danger"
-                            href="#"
-                            @click="close(row.item)"
-                            v-if="row.item.type == 'Door'"
-                            >Close</a
-                        >
-                        <a class="text-primary" href="#" @click="pulse(row.item)">Pulse</a>
+                        <span
+                            v-b-tooltip.hover
+                            title="Call"
+                            class="oi oi-elevator mr-1 text-primary clickable"
+                            @click="pulse(row.item)"
+                            v-if="row.item.type == 'Elevator'"
+                        ></span>
+                        <div v-if="row.item.type == 'Door'">
+                            <a
+                                class="mr-1 text-success"
+                                href="#"
+                                @click="open(row.item)"
+                                v-if="row.item.type == 'Door'"
+                                >Open</a
+                            >
+                            <a
+                                class="mr-1 text-danger"
+                                href="#"
+                                @click="close(row.item)"
+                                v-if="row.item.type == 'Door'"
+                                >Close</a
+                            >
+                            <a class="text-primary" href="#" @click="pulse(row.item)">Pulse</a>
+                        </div>
                     </template>
                 </b-table>
             </b-col>
             <b-col sm="auto"></b-col>
         </b-row>
 
-        <new-device
+        <device-modal
             v-on:saved="device => this.devices.push(device)"
             v-if="canCreateDevice"
-        ></new-device>
+        ></device-modal>
     </b-container>
 </template>
 
@@ -37,7 +46,7 @@
 import http from '../services/http';
 import permissions from '../services/permissions';
 
-import NewDevice from './new-device';
+import Device from './Device';
 
 export default {
     data() {
@@ -60,6 +69,10 @@ export default {
                 {
                     label: '',
                     key: 'actions',
+                },
+                {
+                    label: '',
+                    key: 'edit',
                 },
             ],
             devices: [],
@@ -85,7 +98,7 @@ export default {
         },
     },
     components: {
-        NewDevice,
+        'device-modal': Device,
     },
     async created() {
         await this.load();
