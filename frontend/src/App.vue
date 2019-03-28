@@ -10,11 +10,21 @@
                                 active-class="active"
                                 v-for="view in views"
                                 v-bind:to="view.route"
-                                ><span :class="'oi ' + view.icon"></span>
+                            >
+                                <svg viewBox="0 0 8 8" class="icon">
+                                    <use
+                                        v-bind:xlink:href="
+                                            `/assets/svg/open-iconic.svg#${view.icon}`
+                                        "
+                                    ></use>
+                                </svg>
                             </b-nav-item>
                         </b-nav>
                         <b-button class="float-right" variant="outline-info" @click="logout()"
-                            ><span class="oi oi-account-logout"></span
+                            ><svg viewBox="0 0 8 8" class="clickable icon">
+                                <use
+                                    xlink:href="/assets/svg/open-iconic.svg#account-logout"
+                                ></use></svg
                         ></b-button>
                     </div>
                 </b-col>
@@ -29,8 +39,8 @@
 import http from './services/http';
 
 const iconMap = {
-    users: 'oi-person',
-    devices: 'oi-terminal',
+    users: 'person',
+    devices: 'terminal',
 };
 
 export default {

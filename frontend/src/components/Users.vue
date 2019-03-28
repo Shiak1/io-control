@@ -6,12 +6,15 @@
                 <b-table outlined fixed :items="users" :fields="fields">
                     <template slot="role" slot-scope="row">
                         {{ row.value }}
-                        <span
-                            class="oi oi-pencil float-right clickable"
-                            title="pencil"
-                            aria-hidden="true"
+                        <svg
+                            v-b-tooltip.hover
+                            title="Edit"
+                            viewBox="0 0 8 8"
                             @click="edit(row.item)"
-                        ></span>
+                            class="clickable float-right icon"
+                        >
+                            <use xlink:href="/assets/svg/open-iconic.svg#pencil"></use>
+                        </svg>
                     </template>
                 </b-table>
             </b-col>
@@ -21,8 +24,9 @@
         <b-row>
             <b-col></b-col>
             <b-col cols="6"
-                ><b-button variant="outline-primary" block @click="create"
-                    ><span class="oi oi-plus" title="plus" aria-hidden="true"></span></b-button
+                ><b-button variant="outline-primary" block @click="create">
+                    <svg viewBox="0 0 8 8" class="clickable icon">
+                        <use xlink:href="/assets/svg/open-iconic.svg#plus"></use></svg></b-button
             ></b-col>
             <b-col></b-col>
         </b-row>
