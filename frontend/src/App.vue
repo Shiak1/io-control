@@ -7,6 +7,7 @@
                     <div>
                         <b-nav tabs class="float-left" v-if="views.length > 1">
                             <b-nav-item
+                                class="icon-container"
                                 active-class="active"
                                 v-for="view in views"
                                 v-bind:to="view.route"
@@ -20,7 +21,10 @@
                                 </svg>
                             </b-nav-item>
                         </b-nav>
-                        <b-button class="float-right" variant="outline-info" @click="logout()"
+                        <b-button
+                            class="icon-container float-right"
+                            variant="outline-info"
+                            @click="logout()"
                             ><svg viewBox="0 0 8 8" class="clickable icon">
                                 <use
                                     xlink:href="/assets/svg/open-iconic.svg#account-logout"

@@ -24,7 +24,7 @@
         <b-row>
             <b-col></b-col>
             <b-col cols="6"
-                ><b-button variant="outline-primary" block @click="create">
+                ><b-button class="icon-container" variant="outline-primary" block @click="create">
                     <svg viewBox="0 0 8 8" class="clickable icon">
                         <use xlink:href="/assets/svg/open-iconic.svg#plus"></use></svg></b-button
             ></b-col>

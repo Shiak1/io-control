@@ -2,8 +2,10 @@
     <b-row>
         <b-col></b-col>
         <b-col cols="6"
-            ><b-button variant="outline-primary" block @click="showModal()"
-                ><span class="oi oi-plus" title="plus" aria-hidden="true"></span></b-button
+            ><b-button class="icon-container" variant="outline-primary" block @click="showModal()">
+                <svg viewBox="0 0 8 8" class="clickable icon">
+                    <use xlink:href="/assets/svg/open-iconic.svg#plus"></use>
+                </svg> </b-button
         ></b-col>
         <b-col></b-col>
 

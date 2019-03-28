@@ -5,45 +5,73 @@
             <b-col>
                 <b-table outlined fixed :items="devices" :fields="fields">
                     <template slot="actions" slot-scope="row">
-                        <span
-                            v-b-tooltip.hover
-                            title="Call"
-                            class="oi oi-elevator text-primary clickable"
-                            @click="pulse(row.item)"
-                            v-if="row.item.type == 'Elevator'"
-                        ></span>
-                        <div class="d-inline" v-if="row.item.type == 'Door'">
-                            <span
-                                v-b-tooltip.hover
-                                title="Open"
-                                class="pr-2 border-right oi oi-lock-unlocked text-success clickable"
-                                @click="open(row.item)"
-                            >
-                            </span>
-                            <span
-                                v-b-tooltip.hover
-                                title="Close"
-                                class="pl-2 pr-2 border-right oi oi-lock-locked text-danger clickable"
-                                @click="close(row.item)"
-                            ></span>
-                            <span
-                                v-b-tooltip.hover
-                                title="Buzz"
-                                class="pl-2 oi oi-clock text-primary clickable"
+                        <div class="icon-container d-inline" v-if="row.item.type == 'Elevator'">
+                            <svg
+                                viewBox="0 0 8 8"
+                                class="clickable icon text-primary"
                                 @click="pulse(row.item)"
+                                v-b-tooltip.hover
+                                title="Call"
                             >
+                                <use xlink:href="/assets/svg/open-iconic.svg#elevator"></use>
+                            </svg>
+                        </div>
+
+                        <div class="d-inline" v-if="row.item.type == 'Door'">
+                            <span class="pr-2 border-right clickable">
+                                <svg
+                                    viewBox="0 0 8 8"
+                                    class="icon text-success"
+                                    @click="open(row.item)"
+                                    v-b-tooltip.hover
+                                    title="Unlock"
+                                >
+                                    <use
+                                        xlink:href="/assets/svg/open-iconic.svg#lock-unlocked"
+                                    ></use>
+                                </svg>
+                            </span>
+                            <span class="pl-2 pr-2 border-right clickable">
+                                <svg
+                                    viewBox="0 0 8 8"
+                                    class="icon text-danger"
+                                    @click="close(row.item)"
+                                    v-b-tooltip.hover
+                                    title="Lock"
+                                >
+                                    <use xlink:href="/assets/svg/open-iconic.svg#lock-locked"></use>
+                                </svg>
+                            </span>
+
+                            <span class="pl-2 clickable">
+                                <svg
+                                    viewBox="0 0 8 8"
+                                    class="icon text-primary"
+                                    @click="pulse(row.item)"
+                                    v-b-tooltip.hover
+                                    title="Buzz"
+                                >
+                                    <use xlink:href="/assets/svg/open-iconic.svg#bell"></use>
+                                </svg>
                             </span>
                         </div>
 
-                        <span
+                        <div
+                            inline
+                            class="float-right clickable icon-container"
                             v-if="canCreateDevice"
-                            v-b-tooltip.hover
-                            title="Edit"
-                            class="oi oi-pencil clickable float-right"
-                            @click="$refs.device.showModal(row.item)"
-                        ></span>
+                        >
+                            <svg
+                                viewBox="0 0 8 8"
+                                class="icon"
+                                @click="$refs.device.showModal(row.item)"
+                                v-b-tooltip.hover
+                                title="Edit"
+                            >
+                                <use xlink:href="/assets/svg/open-iconic.svg#pencil"></use>
+                            </svg>
+                        </div>
                     </template>
-                    <template slot="edit" slot-scope="row"> </template>
                 </b-table>
             </b-col>
             <b-col sm="auto"></b-col>
