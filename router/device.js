@@ -6,13 +6,25 @@ const User = require('../services/user');
 
 const { Validation, Unauthenticated, Unauthorized } = require('../exceptions');
 
-router.get('/', async ({ session: { user: { role, _id } } }, response) => {
-    const devices =
-        role == 'User'
-            ? (await User.findById(_id).populate('devices')).devices
-            : (await Device.find()).map(device => device.data());
+async function getUserDevices(id) {
+    const user = await User.findById(id).populate('devices groups');
 
-    response.send({ data: devices });
+    Validation.throwUnless(user);
+
+    return user.devices.concat(user.groups.flat()).map(device => device.data());
+}
+
+router.get('/', async ({ session: { user: { role, _id } } }, response, next) => {
+    try {
+        const devices =
+            role == 'User'
+                ? await getUserDevices(_id)
+                : (await Device.find()).map(device => device.data());
+
+        response.send({ data: devices });
+    } catch (error) {
+        next(error);
+    }
 });
 
 router.post(

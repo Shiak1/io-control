@@ -9,6 +9,6 @@ module.exports = class {
 	}
 
 	data() {
-		return this.toObject({ getters: true });
+		return this.toObject({ getters: true, virtuals: true });
 	}
 };
