@@ -2,9 +2,9 @@ const http = require('http');
 const timeout = 10000;
 
 module.exports = {
-    request(url, method) {
+    get(url) {
         return new Promise((resolve, reject) => {
-            const request = http.request({ url, method }, resolve).on('error', reject);
+            const request = http.get(url, resolve).on('error', reject);
 
             request.on('socket', socket => {
                 socket.setTimeout(timeout);
@@ -12,9 +12,5 @@ module.exports = {
                 socket.on('timeout', () => request.abort());
             });
         });
-    },
-
-    get(url) {
-        return this.request(url, 'GET');
     },
 };
