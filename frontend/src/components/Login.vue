@@ -1,37 +1,44 @@
 <template>
     <div class="flex">
         <div class="vertical-center">
-            <b-card class="mb-2 text-primary" align="center" title="👋">
-                <b-alert show variant="danger" v-if="error">{{ error }}</b-alert>
-                <b-form-group>
-                    <b-form-input
-                        id="username"
-                        type="text"
-                        v-model="form.username"
-                        placeholder="Username"
-                        autofocus
-                        ref="username"
-                        v-on:keyup.enter="enter('username')"
-                    />
-                </b-form-group>
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="card-title text-primary fadein h6">
+                        Hi
+                    </div>
 
-                <b-form-group>
-                    <b-form-input
-                        id="password"
-                        type="password"
-                        v-model="form.password"
-                        placeholder="Password"
-                        ref="password"
-                        v-on:keyup.enter="enter('password')"
-                    />
-                </b-form-group>
+                    <b-alert show variant="danger" v-if="error">{{ error }}</b-alert>
 
-                <b-form-group>
-                    <b-button type="submit" variant="outline-primary" block @click="login"
-                        >Next</b-button
-                    >
-                </b-form-group>
-            </b-card>
+                    <b-form-group>
+                        <b-form-input
+                            id="username"
+                            type="text"
+                            v-model="form.username"
+                            placeholder="Username"
+                            autofocus
+                            ref="username"
+                            v-on:keyup.enter="enter('username')"
+                        />
+                    </b-form-group>
+
+                    <b-form-group>
+                        <b-form-input
+                            id="password"
+                            type="password"
+                            v-model="form.password"
+                            placeholder="Password"
+                            ref="password"
+                            v-on:keyup.enter="enter('password')"
+                        />
+                    </b-form-group>
+
+                    <b-form-group>
+                        <b-button type="submit" variant="outline-primary" block @click="login"
+                            >Next</b-button
+                        >
+                    </b-form-group>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -96,3 +103,24 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+@keyframes fade {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.fadein {
+    animation-name: fade;
+    animation-duration: 3s;
+}
+</style>
