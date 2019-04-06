@@ -6,15 +6,18 @@
                 <b-table outlined fixed :items="users" :fields="fields">
                     <template slot="role" slot-scope="row">
                         {{ row.value }}
-                        <svg
-                            v-b-tooltip.hover
-                            title="Edit"
-                            viewBox="0 0 8 8"
-                            @click="edit(row.item)"
-                            class="clickable float-right icon"
-                        >
-                            <use xlink:href="/assets/svg/open-iconic.svg#pencil"></use>
-                        </svg>
+
+                        <div class="float-right clickable">
+                            <svg
+                                v-b-tooltip.hover
+                                title="Edit"
+                                viewBox="0 0 8 8"
+                                @click="edit(row.item)"
+                                class="icon"
+                            >
+                                <use href="/assets/svg/open-iconic.svg#pencil"></use>
+                            </svg>
+                        </div>
                     </template>
                 </b-table>
             </b-col>

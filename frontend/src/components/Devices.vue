@@ -4,72 +4,56 @@
             <b-col sm="auto"></b-col>
             <b-col>
                 <b-table outlined fixed :items="devices" :fields="fields">
-                    <template slot="actions" slot-scope="row">
-                        <div class="icon-container d-inline" v-if="row.item.type == 'Elevator'">
-                            <svg
-                                viewBox="0 0 8 8"
-                                class="clickable icon text-primary"
-                                @click="pulse(row.item)"
-                                v-b-tooltip.hover
-                                title="Call"
-                            >
-                                <use xlink:href="/assets/svg/open-iconic.svg#elevator"></use>
-                            </svg>
-                        </div>
-
-                        <div class="d-inline" v-if="row.item.type == 'Door'">
-                            <span class="pr-2 border-right clickable">
-                                <svg
-                                    viewBox="0 0 8 8"
-                                    class="icon text-success"
-                                    @click="open(row.item)"
-                                    v-b-tooltip.hover
-                                    title="Unlock"
-                                >
-                                    <use
-                                        xlink:href="/assets/svg/open-iconic.svg#lock-unlocked"
-                                    ></use>
-                                </svg>
-                            </span>
-                            <span class="pl-2 pr-2 border-right clickable">
-                                <svg
-                                    viewBox="0 0 8 8"
-                                    class="icon text-danger"
-                                    @click="close(row.item)"
-                                    v-b-tooltip.hover
-                                    title="Lock"
-                                >
-                                    <use xlink:href="/assets/svg/open-iconic.svg#lock-locked"></use>
-                                </svg>
-                            </span>
-
-                            <span class="pl-2 clickable">
-                                <svg
-                                    viewBox="0 0 8 8"
-                                    class="icon text-primary"
-                                    @click="pulse(row.item)"
-                                    v-b-tooltip.hover
-                                    title="Buzz"
-                                >
-                                    <use xlink:href="/assets/svg/open-iconic.svg#bell"></use>
-                                </svg>
-                            </span>
-                        </div>
+                    <template slot="controller.name" slot-scope="{ value, item }">
+                        {{ value }}
 
                         <div
-                            inline
-                            class="float-right clickable icon-container"
-                            v-if="canCreateDevice"
+                            class="pl-2 d-inline icon-container clickable text-primary"
+                            v-if="item.type == 'Elevator'"
                         >
-                            <svg
-                                viewBox="0 0 8 8"
-                                class="icon"
-                                @click="$refs.device.showModal(row.item)"
-                                v-b-tooltip.hover
-                                title="Edit"
+                            <icon
+                                icon="elevator"
+                                v-bind:onClick="() => pulse(item)"
+                                title="Call"
+                            ></icon>
+                        </div>
+
+                        <div class="d-inline" v-if="item.type == 'Door'">
+                            <div
+                                class="pl-2 d-inline pr-2 border-right clickable text-success icon-container"
                             >
-                                <use xlink:href="/assets/svg/open-iconic.svg#pencil"></use>
-                            </svg>
+                                <icon
+                                    icon="lock-unlocked"
+                                    v-bind:onClick="() => open(item)"
+                                    title="Unlock"
+                                ></icon>
+                            </div>
+                            <div
+                                class="d-inline pl-2 pr-2 border-right clickable text-danger icon-container"
+                            >
+                                <icon
+                                    icon="lock-locked"
+                                    v-bind:onClick="() => close(item)"
+                                    title="Lock"
+                                ></icon>
+                            </div>
+
+                            <div class="d-inline pl-2 clickable text-primary icon-container">
+                                <icon
+                                    icon="bell"
+                                    v-bind:onClick="() => pulse(item)"
+                                    title="Buzz"
+                                ></icon>
+                            </div>
+                        </div>
+
+                        <div class="float-right icon-container clickable" v-if="canCreateDevice">
+                            <icon
+                                title="Edit"
+                                v-bind:onClick="() => $refs.device.showModal(item)"
+                                icon="pencil"
+                            >
+                            </icon>
                         </div>
                     </template>
                 </b-table>
@@ -110,10 +94,6 @@ export default {
                     key: 'controller.name',
                     sortable: true,
                     label: 'Controller',
-                },
-                {
-                    label: '',
-                    key: 'actions',
                 },
             ],
         };

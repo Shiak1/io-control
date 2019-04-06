@@ -1,7 +1,7 @@
 <template>
     <svg
         viewBox="0 0 8 8"
-        @click="onClick()"
+        @click="onClick && onClick()"
         v-b-tooltip.hover
         v-bind="{ class: `icon ${classes || ''}`, title }"
     >

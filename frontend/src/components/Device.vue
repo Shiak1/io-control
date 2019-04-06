@@ -3,10 +3,9 @@
         <b-col></b-col>
         <b-col cols="6"
             ><b-button class="icon-container" variant="outline-primary" block @click="showModal()">
-                <svg viewBox="0 0 8 8" class="clickable icon">
-                    <use xlink:href="/assets/svg/open-iconic.svg#plus"></use>
-                </svg> </b-button
-        ></b-col>
+                <icon icon="plus"></icon>
+            </b-button>
+        </b-col>
         <b-col></b-col>
 
         <b-modal ref="modal" :title="title">

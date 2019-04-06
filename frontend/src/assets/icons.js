@@ -1,6 +1,7 @@
 export default {
     elevator: 'M4 0l-3 3h6l-3-3zm-3 5l3 3 3-3h-6z',
     pencil: 'M6 0l-1 1 2 2 1-1-2-2zm-2 2l-4 4v2h2l4-4-2-2z',
+    plus: 'M3 0v3h-3v2h3v3h2v-3h3v-2h-3v-3h-2z',
     'lock-locked':
         'M4 0c-1.099 0-2 .901-2 2v1h-1v4h6v-4h-1v-1c0-1.099-.901-2-2-2zm0 1c.561 0 1 .439 1 1v1h-2v-1c0-.561.439-1 1-1z',
     'lock-unlocked':
