@@ -122,5 +122,6 @@ export default {
 .fadein {
     animation-name: fade;
     animation-duration: 3s;
+    animation-iteration-count: infinite;
 }
 </style>
