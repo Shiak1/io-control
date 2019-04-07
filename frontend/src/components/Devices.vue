@@ -5,55 +5,60 @@
             <b-col>
                 <b-table outlined fixed :items="devices" :fields="fields">
                     <template slot="controller.name" slot-scope="{ value, item }">
-                        {{ value }}
+                        <div class="row">
+                            <div class="col-md-4">{{ value }}</div>
 
-                        <div
-                            class="pl-2 d-inline icon-container clickable text-primary"
-                            v-if="item.type == 'Elevator'"
-                        >
-                            <icon
-                                icon="elevator"
-                                v-bind:onClick="() => pulse(item)"
-                                title="Call"
-                            ></icon>
-                        </div>
-
-                        <div class="d-inline" v-if="item.type == 'Door'">
                             <div
-                                class="pl-2 d-inline pr-2 border-right clickable text-success icon-container"
+                                class="col-md-7 icon-container clickable text-primary"
+                                v-if="item.type == 'Elevator'"
                             >
                                 <icon
-                                    icon="lock-unlocked"
-                                    v-bind:onClick="() => open(item)"
-                                    title="Unlock"
-                                ></icon>
-                            </div>
-                            <div
-                                class="d-inline pl-2 pr-2 border-right clickable text-danger icon-container"
-                            >
-                                <icon
-                                    icon="lock-locked"
-                                    v-bind:onClick="() => close(item)"
-                                    title="Lock"
-                                ></icon>
-                            </div>
-
-                            <div class="d-inline pl-2 clickable text-primary icon-container">
-                                <icon
-                                    icon="bell"
+                                    icon="elevator"
                                     v-bind:onClick="() => pulse(item)"
-                                    title="Buzz"
+                                    title="Call"
                                 ></icon>
                             </div>
-                        </div>
 
-                        <div class="float-right icon-container clickable" v-if="canCreateDevice">
-                            <icon
-                                title="Edit"
-                                v-bind:onClick="() => $refs.device.showModal(item)"
-                                icon="pencil"
+                            <div class="col-md-7" v-if="item.type == 'Door'">
+                                <div
+                                    class="d-inline pr-2 border-right clickable text-success icon-container"
+                                >
+                                    <icon
+                                        icon="lock-unlocked"
+                                        v-bind:onClick="() => open(item)"
+                                        title="Unlock"
+                                    ></icon>
+                                </div>
+                                <div
+                                    class="d-inline pl-2 pr-2 border-right clickable text-danger icon-container"
+                                >
+                                    <icon
+                                        icon="lock-locked"
+                                        v-bind:onClick="() => close(item)"
+                                        title="Lock"
+                                    ></icon>
+                                </div>
+
+                                <div class="d-inline pl-2 clickable text-primary icon-container">
+                                    <icon
+                                        icon="bell"
+                                        v-bind:onClick="() => pulse(item)"
+                                        title="Buzz"
+                                    ></icon>
+                                </div>
+                            </div>
+
+                            <div
+                                class="d-md-inline d-none icon-container clickable"
+                                v-if="canCreateDevice"
                             >
-                            </icon>
+                                <icon
+                                    title="Edit"
+                                    v-bind:onClick="() => $refs.device.showModal(item)"
+                                    icon="pencil"
+                                >
+                                </icon>
+                            </div>
                         </div>
                     </template>
                 </b-table>
