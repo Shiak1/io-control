@@ -2,7 +2,7 @@
     <div>
         <div
             v-for="allowed in permitted"
-            :key="`device-permission:${allowed.name}`"
+            :key="`device-permission:${allowed.type}-${allowed.id || allowed.name}`"
             class="border-bottom mb-3 pb-2"
         >
             <span :class="allowed.type == 'Group' ? 'font-weight-bold' : ''">{{
@@ -89,6 +89,7 @@ export default {
             }
 
             this.$refs.input.inputValue = '';
+            this.search = '';
         },
         remove({ type, name, id }) {
             if (type == 'Group') {
