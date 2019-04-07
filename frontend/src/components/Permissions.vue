@@ -109,7 +109,10 @@ export default {
 
         data.forEach(({ name, id, group }) => {
             devices.push({ name, id });
-            groups.add(group);
+
+            if (group) {
+                groups.add(group);
+            }
         });
     },
 };
