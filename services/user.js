@@ -42,7 +42,7 @@ class User extends Model {
     static list() {
         return this.find()
             .select('-hash')
-            .populate('devices groups');
+            .populate('devices');
     }
 
     static async delete(id) {
