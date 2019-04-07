@@ -12,7 +12,7 @@ async function getUserDevices(id) {
     Validation.throwUnless(user);
 
     return user.devices
-        .concat(user.groups.flat())
+        .concat((user.groups || []).flat())
         .map(device => device.data())
         .distinct('id');
 }
