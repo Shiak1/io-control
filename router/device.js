@@ -11,7 +11,10 @@ async function getUserDevices(id) {
 
     Validation.throwUnless(user);
 
-    return user.devices.concat(user.groups.flat()).map(device => device.data());
+    return user.devices
+        .concat(user.groups.flat())
+        .map(device => device.data())
+        .distinct('id');
 }
 
 router.get('/', async ({ session: { user: { role, _id } } }, response, next) => {
