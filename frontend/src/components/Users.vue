@@ -4,19 +4,11 @@
             <b-col sm="auto"></b-col>
             <b-col>
                 <b-table outlined fixed :items="users" :fields="fields">
-                    <template slot="role" slot-scope="row">
-                        {{ row.value }}
+                    <template v-slot:role="{ item, value }">
+                        {{ value }}
 
                         <div class="float-right clickable">
-                            <svg
-                                v-b-tooltip.hover
-                                title="Edit"
-                                viewBox="0 0 8 8"
-                                @click="edit(row.item)"
-                                class="icon"
-                            >
-                                <use href="/assets/svg/open-iconic.svg#pencil"></use>
-                            </svg>
+                            <icon icon="pencil" title="Edit" :onClick="() => edit(item)"></icon>
                         </div>
                     </template>
                 </b-table>
@@ -28,8 +20,7 @@
             <b-col></b-col>
             <b-col cols="6"
                 ><b-button class="icon-container" variant="outline-primary" block @click="create">
-                    <svg viewBox="0 0 8 8" class="clickable icon">
-                        <use xlink:href="/assets/svg/open-iconic.svg#plus"></use></svg></b-button
+                    <icon icon="plus"></icon></b-button
             ></b-col>
             <b-col></b-col>
         </b-row>

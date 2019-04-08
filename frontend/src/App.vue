@@ -10,26 +10,19 @@
                                 class="icon-container"
                                 active-class="active"
                                 v-for="view in views"
-                                v-bind:to="view.route"
+                                :to="view.route"
+                                :key="`vue-routes:${view.route}`"
                             >
-                                <svg viewBox="0 0 8 8" class="icon">
-                                    <use
-                                        v-bind:xlink:href="
-                                            `/assets/svg/open-iconic.svg#${view.icon}`
-                                        "
-                                    ></use>
-                                </svg>
+                                <icon :icon="view.icon"></icon>
                             </b-nav-item>
                         </b-nav>
                         <b-button
-                            class="icon-container float-right"
+                            class="icon-container float-right clickable"
                             variant="outline-info"
                             @click="logout()"
-                            ><svg viewBox="0 0 8 8" class="clickable icon">
-                                <use
-                                    xlink:href="/assets/svg/open-iconic.svg#account-logout"
-                                ></use></svg
-                        ></b-button>
+                        >
+                            <icon icon="account-logout"></icon>
+                        </b-button>
                     </div>
                 </b-col>
                 <b-col sm="auto"></b-col>
