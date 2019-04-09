@@ -49,7 +49,7 @@ class Role {
 
 class Admin extends Role {
     get resources() {
-        return ['controllers', 'log'];
+        return ['controllers'];
     }
 
     get hierarchy() {
@@ -63,7 +63,7 @@ class Manager extends Role {
     }
 
     get resources() {
-        return ['user'];
+        return ['user', 'log'];
     }
 
     get hierarchy() {
