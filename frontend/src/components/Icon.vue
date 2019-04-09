@@ -1,6 +1,6 @@
 <template>
     <svg
-        viewBox="0 0 8 8"
+        :viewBox="viewBox || '0 0 8 8'"
         @click="onClick && onClick()"
         v-b-tooltip.hover
         v-bind="{ class: `icon ${classes || ''}`, title }"
@@ -14,6 +14,6 @@ import icons from '../assets/icons';
 
 export default {
     data: () => ({ icons }),
-    props: ['icon', 'classes', 'title', 'onClick'],
+    props: ['icon', 'viewBox', 'classes', 'title', 'onClick'],
 };
 </script>

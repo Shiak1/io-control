@@ -26,18 +26,20 @@ router.put('/:id', async (request, response, next) => {
                 user: { id: currentUser },
             },
             params: { id },
-            body: { fullName, password },
+            body: { fullName, password, devices, deviceGroups },
         } = request;
 
         const update = {
             id,
             password,
             fullName,
+            devices,
+            deviceGroups,
         };
 
-        const { role } = await User.findOrFail(id);
+        const user = await User.findOrFail(id);
 
-        Validation.throwIf(role == 'Admin' && id != currentUser);
+        Validation.throwIf(user.role == 'Admin' && id != currentUser);
 
         response.send({ data: (await User.update(update)).data() });
     } catch (error) {

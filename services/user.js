@@ -40,7 +40,9 @@ class User extends Model {
     }
 
     static list() {
-        return this.find().select('-hash');
+        return this.find()
+            .select('-hash')
+            .populate('devices');
     }
 
     static async delete(id) {

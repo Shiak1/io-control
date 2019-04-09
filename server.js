@@ -5,6 +5,8 @@ const path = require('path');
 const process = require('process');
 const router = require('./router');
 
+require('./utils/array');
+
 const {
     app: { port },
 } = require('./config');

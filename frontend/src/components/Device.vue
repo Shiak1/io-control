@@ -13,9 +13,12 @@
                 <b-form-group v-if="controller.source == 'select'">
                     <b-form-select v-model="controller.selected">
                         <option :value="{}" disabled hidden>Select</option>
-                        <option v-for="option in controller.options" v-bind:value="option">{{
-                            option.name
-                        }}</option>
+                        <option
+                            v-for="option in controller.options"
+                            v-bind:value="option"
+                            :key="`controller-option:${option}`"
+                            >{{ option.name }}</option
+                        >
                     </b-form-select>
                     <b-button
                         block
