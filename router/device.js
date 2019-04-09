@@ -11,10 +11,7 @@ async function getUserDevices(id) {
 
     Validation.throwUnless(user);
 
-    return user.devices
-        .concat((user.groups || []).flat())
-        .map(device => device.data())
-        .distinct('id');
+    return await user.access();
 }
 
 router.get('/', async ({ session: { user: { role, _id } } }, response, next) => {
@@ -118,7 +115,7 @@ router.post(
 
         Unauthenticated.throwUnless(user);
 
-        const device = await Device.findById(id);
+        const device = await Device.findById(id).populate('devices groups');
 
         Unauthorized.throwUnless(user.allowedOnDevice(device));
 

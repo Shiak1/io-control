@@ -103,14 +103,25 @@ class User extends Model {
         this.name = { first, last };
     }
 
+    async access() {
+        return this.devices
+            .concat((this.groups || []).flat())
+            .map(device => device.data())
+            .distinct('id');
+    }
+
     data() {
         const { hash, ...rest } = super.data();
 
         return rest;
     }
 
-    allowedOnDevice({ id, group }) {
-        return this.role != 'User' || this.devices.includes(id) || this.groups.includes(group);
+    async allowedOnDevice({ id, group }) {
+        if (this.role != 'User') return true;
+
+        const [devices, groups] = [this.devices || [], this.deviceGroups || []];
+
+        return devices.includes(id) || groups.includes(group);
     }
 }
 
