@@ -64,6 +64,10 @@ class Response {
     hasError() {
         return this.errorCodes.includes(this.status);
     }
+
+    isUnauthenticated() {
+        return this.status == 401;
+    }
 }
 
 class Http {
@@ -81,7 +85,7 @@ class Http {
 
         this.response = await Response.make(await fetch(this.url, this.request));
 
-        return await this.handleError()
+        return this.handleError()
             .redirectIfRequired()
             .data();
     }
@@ -117,7 +121,9 @@ class Http {
     }
 
     handleError() {
-        if (this.response.hasError()) {
+        if (this.response.isUnauthenticated()) {
+            window.location = '/';
+        } else if (this.response.hasError()) {
             throw new Error(this.response.data.message, this.response.status);
         }
 
