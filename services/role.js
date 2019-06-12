@@ -59,7 +59,7 @@ class Admin extends Role {
 
 class Manager extends Role {
     get views() {
-        return ['users'];
+        return ['users', 'logs'];
     }
 
     get resources() {

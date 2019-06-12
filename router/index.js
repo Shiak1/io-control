@@ -73,7 +73,7 @@ class Router {
             }
         });
 
-        this.app.get('/users|devices', (request, response) => {
+        this.app.get('/users|devices|logs', (request, response) => {
             try {
                 this.authentication.checkRequest(request);
 

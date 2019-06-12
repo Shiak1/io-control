@@ -13,7 +13,7 @@
                                 :to="view.route"
                                 :key="`vue-routes:${view.route}`"
                             >
-                                <icon :icon="view.icon"></icon>
+                                <icon :viewBox="view.viewBox" :icon="view.icon"></icon>
                             </b-nav-item>
                         </b-nav>
                         <b-button
@@ -36,8 +36,9 @@
 import http from './services/http';
 
 const iconMap = {
-    users: 'person',
-    devices: 'terminal',
+    users: {order: 2, icon:'person'},
+    devices: { order: 1, icon: 'terminal' },
+    logs: { order: 3, icon: 'history', viewBox: '0 0 14 16' },
 };
 
 export default {
@@ -57,8 +58,10 @@ export default {
 
             this.views = (await http.get('/api/views')).data.map(view => ({
                 route: '/' + view,
-                icon: iconMap[view],
-            }));
+                icon: iconMap[view].icon,
+                viewBox: iconMap[view].viewBox,
+                order: iconMap[view].order
+            })).sort(({order: a}, {order: b}) => a - b);
         },
     },
     created() {
