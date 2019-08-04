@@ -3,6 +3,10 @@ const router = require('express').Router();
 const authentication = require('../services/authentication');
 const Unauthenticated = require('../exceptions/unauthenticated');
 
+router.get('/', (_, response) => {
+    response.send({ success: true });
+});
+
 router.post('/', async (request, response, next) => {
     const {
         body: { username, password },

@@ -77,7 +77,7 @@ class User extends Role {
     }
 
     get resources() {
-        return ['device', 'views', 'permissions'];
+        return ['device', 'views', 'permissions', 'authentication'];
     }
 }
 

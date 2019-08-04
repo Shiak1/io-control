@@ -121,7 +121,7 @@ class Http {
     }
 
     handleError() {
-        if (this.response.isUnauthenticated()) {
+        if (this.response.isUnauthenticated() && window.location.pathname != '/login') {
             window.location = '/';
         } else if (this.response.hasError()) {
             throw new Error(this.response.data.message, this.response.status);

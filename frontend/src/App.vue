@@ -36,7 +36,7 @@
 import http from './services/http';
 
 const iconMap = {
-    users: {order: 2, icon:'person'},
+    users: { order: 2, icon: 'person' },
     devices: { order: 1, icon: 'terminal' },
     logs: { order: 3, icon: 'history', viewBox: '0 0 14 16' },
 };
@@ -56,16 +56,26 @@ export default {
         async loadViews() {
             if (!this.loggedIn()) return;
 
-            this.views = (await http.get('/api/views')).data.map(view => ({
-                route: '/' + view,
-                icon: iconMap[view].icon,
-                viewBox: iconMap[view].viewBox,
-                order: iconMap[view].order
-            })).sort(({order: a}, {order: b}) => a - b);
+            this.views = (await http.get('/api/views')).data
+                .map(view => ({
+                    route: '/' + view,
+                    icon: iconMap[view].icon,
+                    viewBox: iconMap[view].viewBox,
+                    order: iconMap[view].order,
+                }))
+                .sort(({ order: a }, { order: b }) => a - b);
+        },
+
+        refreshOnLoggedout() {
+            setInterval(async () => {
+                await http.get('api/authentication');
+            }, 5000);
         },
     },
     created() {
         this.loadViews();
+
+        this.refreshOnLoggedout();
     },
 };
 </script>

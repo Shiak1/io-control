@@ -55,7 +55,7 @@ class Authentication {
             resave: false,
             saveUninitialized: false,
             cookie: {
-                expires: 600000,
+                maxAge: 30 * 60 * 1000,
             },
             store,
         });
