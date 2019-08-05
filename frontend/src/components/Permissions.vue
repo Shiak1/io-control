@@ -11,27 +11,27 @@
             <button class="float-right close text-danger" @click="remove(allowed)">x</button>
         </div>
 
-        <v-typeahead
-            v-model="search"
-            :data="available"
-            :serializer="entry => entry.name"
-            :minMatchingChars="1"
-            @hit="add($event)"
+        <v-autocomplete
+            :search="search"
+            :get-result-value="entry => entry.name"
+            @submit="add($event)"
             placeholder="Type to search..."
             ref="input"
         >
-            <template v-slot:suggestion="{ data: { name, type }, htmlText: html }">
-                <span class="font-weight-bold">{{ type }}: </span>
-                <span v-html="html"></span>
+            <template v-slot:result="{ result: { name, type }, props }">
+                <li class="autocomplete-result" v-bind="props">
+                    <span class="font-weight-bold">{{ type }}: </span>
+                    <span v-html="name"></span>
+                </li>
             </template>
-        </v-typeahead>
+        </v-autocomplete>
     </div>
 </template>
 
 <script>
 import http from '../services/http';
 
-import Typeahead from 'vue-bootstrap-typeahead';
+import Autocomplete from '@trevoreyre/autocomplete-vue';
 
 let devices = [];
 let groups = new Set();
@@ -39,8 +39,6 @@ let groups = new Set();
 export default {
     data() {
         return {
-            search: null,
-            available: [],
             permissions: {
                 devices: [...this.devices],
                 groups: [...this.groups],
@@ -51,6 +49,19 @@ export default {
     props: ['devices', 'groups'],
 
     computed: {
+        available() {
+            const devicePermissions = new Set(this.permissions.devices.map(({ id }) => id));
+            const groupPermissions = new Set(this.permissions.groups);
+
+            return devices
+                .filter(({ id }) => !devicePermissions.has(id))
+                .map(device => ({ ...device, type: 'Device' }))
+                .concat(
+                    [...groups]
+                        .filter(name => !groupPermissions.has(name))
+                        .map(name => ({ name, type: 'Group' }))
+                );
+        },
         permitted() {
             const { devices, groups } = this.permissions;
 
@@ -61,23 +72,7 @@ export default {
     },
 
     components: {
-        'v-typeahead': Typeahead,
-    },
-
-    watch: {
-        search() {
-            const devicePermissions = new Set(this.permissions.devices.map(({ id }) => id));
-            const groupPermissions = new Set(this.permissions.groups);
-
-            this.available = devices
-                .filter(({ id }) => !devicePermissions.has(id))
-                .map(device => ({ ...device, type: 'Device' }))
-                .concat(
-                    [...groups]
-                        .filter(name => !groupPermissions.has(name))
-                        .map(name => ({ name, type: 'Group' }))
-                );
-        },
+        'v-autocomplete': Autocomplete,
     },
 
     methods: {
@@ -88,8 +83,7 @@ export default {
                 this.permissions.devices.push({ name, id });
             }
 
-            this.$refs.input.inputValue = '';
-            this.search = '';
+            this.$refs.input.setValue('');
         },
         remove({ type, name, id }) {
             if (type == 'Group') {
@@ -99,6 +93,11 @@ export default {
                     ({ id: current }) => current != id
                 );
             }
+        },
+        search(input) {
+            const devices = this.available;
+
+            return input ? devices.filter(({ name }) => name.includes(input)) : devices;
         },
     },
 
